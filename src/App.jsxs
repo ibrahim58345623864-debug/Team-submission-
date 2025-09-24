@@ -1,0 +1,54 @@
+import React, { useState } from "react";
+
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [task, setTask] = useState("");
+  const [submissions, setSubmissions] = useState([]);
+
+  const login = (role) => setUser({ role });
+
+  const submitTask = () => {
+    setSubmissions([...submissions, { user: user.role, task }]);
+    setTask("");
+  };
+
+  if (!user) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <h2>Login</h2>
+        <button onClick={() => login("admin")}>Login as Admin</button>
+        <button onClick={() => login("member")}>Login as Member</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Welcome {user.role}</h2>
+
+      {user.role === "member" && (
+        <div>
+          <input
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
+            placeholder="Enter your task"
+          />
+          <button onClick={submitTask}>Submit</button>
+        </div>
+      )}
+
+      {user.role === "admin" && (
+        <div>
+          <h3>Submissions</h3>
+          <ul>
+            {submissions.map((s, i) => (
+              <li key={i}>
+                {s.user}: {s.task}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
